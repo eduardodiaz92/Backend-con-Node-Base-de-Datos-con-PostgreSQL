@@ -10,7 +10,8 @@ class UserService {
   constructor() {}
 
   async create(data) {
-    return data;
+    const rta = await models.User.create(data);
+    return rta;
   }
 
   async find() {
@@ -19,18 +20,31 @@ class UserService {
   }
 
   async findOne(id) {
-    return id;
+    const rta = await models.User.findByPk(id);
+    return rta;
   }
 
-  async update(id, changes) {
-    return {
-      id,
-      changes,
-    };
+  async update(id, data) {
+    const rta = await models.User.update(
+      {
+        ...data,
+      },
+      {
+        where: {
+          id: id,
+        },
+      }
+    );
+    return rta;
   }
 
   async delete(id) {
-    return { id };
+    const rta = await models.User.destroy({
+      where: {
+        id: id,
+      },
+    });
+    return rta;
   }
 }
 
