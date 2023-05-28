@@ -1,29 +1,25 @@
 // const boom = require('@hapi/boom');
 
-const pool = require('../libs/postgres.pool');
+// const pool = require('../libs/postgres.pool');
+
+//Cada vez que hacemos la configuracion de setupModel-init, se crea un espacio de
+//nombres reservados que se llama models, donde guarda los modelos
+const { models } = require('../libs/sequelize');
 
 class UserService {
-  constructor() {
-    this.users = [];
-    // this.generate();
-    this.pool = pool;
-    this.pool.on('error', (err) => console.log(err));
-  }
+  constructor() {}
 
   async create(data) {
     return data;
   }
 
   async find() {
-    const query = 'SELECT * FROM task';
-    const rta = await this.pool.query(query);
-    return rta.rows;
+    const rta = await models.User.findAll();
+    return rta;
   }
 
   async findOne(id) {
-    const query = `SELECT * FROM task WHERE id = ${id}`;
-    const rta = await this.pool.query(query);
-    return rta.rows;
+    return id;
   }
 
   async update(id, changes) {
