@@ -2,7 +2,7 @@ const Joi = require('joi');
 
 const id = Joi.number().integer();
 const email = Joi.string().email();
-const password = Joi.string().min(8);
+const password = Joi.string().max(20);
 const createdAt = Joi.date();
 
 const createUserSchema = Joi.object({

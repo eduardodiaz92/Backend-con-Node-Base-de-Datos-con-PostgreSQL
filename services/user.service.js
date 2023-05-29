@@ -1,4 +1,4 @@
-// const boom = require('@hapi/boom');
+const boom = require('@hapi/boom');
 
 // const pool = require('../libs/postgres.pool');
 
@@ -10,8 +10,8 @@ class UserService {
   constructor() {}
 
   async create(data) {
-    const rta = await models.User.create(data);
-    return rta;
+    const newUser = await models.User.create(data);
+    return newUser;
   }
 
   async find() {
@@ -20,31 +20,44 @@ class UserService {
   }
 
   async findOne(id) {
-    const rta = await models.User.findByPk(id);
-    return rta;
+    const user = await models.User.findByPk(id);
+    if (!user) {
+      throw boom.notFound('user not found');
+    }
+    return user;
   }
 
   async update(id, data) {
-    const rta = await models.User.update(
-      {
-        ...data,
-      },
-      {
-        where: {
-          id: id,
-        },
-      }
-    );
+    //opc1
+    // const rta = await models.User.update(
+    //   {
+    //     ...data,
+    //   },
+    //   {
+    //     where: {
+    //       id: id,
+    //     },
+    //   }
+    // );
+    // return rta;
+    //opc 2
+    const user = await this.findOne(id);
+    const rta = await user.update(data);
     return rta;
   }
 
   async delete(id) {
-    const rta = await models.User.destroy({
-      where: {
-        id: id,
-      },
-    });
-    return rta;
+    //opc1
+    // const rta = await models.User.destroy({
+    //   where: {
+    //     id: id,
+    //   },
+    // });
+    // return rta;
+    //opc2
+    const user = await this.findOne(id);
+    await user.destroy();
+    return { id };
   }
 }
 

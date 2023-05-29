@@ -1,5 +1,5 @@
 // const { faker } = require('@faker-js/faker');
-// const boom = require('@hapi/boom');
+const boom = require('@hapi/boom');
 
 const { models } = require('../libs/sequelize');
 
@@ -19,31 +19,23 @@ class ProductsService {
   }
 
   async findOne(id) {
-    const rta = models.Product.findByPk(id);
-    return rta;
+    const product = await models.Product.findByPk(id);
+    if (!product) {
+      throw boom.notFound('product not found');
+    }
+    return product;
   }
 
   async update(id, data) {
-    const rta = await models.Product.update(
-      {
-        ...data,
-      },
-      {
-        where: {
-          id: id,
-        },
-      }
-    );
+    const product = await this.findOne(id);
+    const rta = await product.update(data);
     return rta;
   }
 
   async delete(id) {
-    const rta = await models.Product.destroy({
-      where: {
-        id: id,
-      },
-    });
-    return rta;
+    const product = await this.findOne(id);
+    await product.destroy();
+    return { id };
   }
 }
 
