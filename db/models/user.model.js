@@ -1,9 +1,7 @@
 const { Model, DataTypes, Sequelize } = require('sequelize');
 
-//Una buena practica es empezar a definir cual será el nombre de nuestra tabla
 const USER_TABLE = 'users';
 
-//Este schema defina la estructura de la base de datos
 const UserSchema = {
   id: {
     allowNull: false,
@@ -32,11 +30,15 @@ const UserSchema = {
     defaultValue: Sequelize.NOW,
   },
 };
-//Gracias a la extension de modelo nosotros tenemos atributos como find, etc
+
 class User extends Model {
-  static associate() {
-    //models
+  static associate(models) {
+    this.hasOne(models.Customer, {
+      as: 'customer',
+      foreignKey: 'userId',
+    });
   }
+
   static config(sequelize) {
     return {
       sequelize,
@@ -46,4 +48,5 @@ class User extends Model {
     };
   }
 }
+
 module.exports = { USER_TABLE, UserSchema, User };

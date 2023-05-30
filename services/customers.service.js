@@ -1,41 +1,42 @@
 const boom = require('@hapi/boom');
-
 const { models } = require('../libs/sequelize');
 
-class CustomersService {
-  constructor() {
-    this.customers = [];
-  }
-
-  async create(data) {
-    const rta = await models.Customer.create(data);
-    return rta;
-  }
+class CustomerService {
+  constructor() {}
 
   async find() {
-    const rta = await models.Customer.findAll();
+    const rta = await models.Customer.findAll({
+      include: ['user'],
+    });
     return rta;
   }
 
   async findOne(id) {
-    const customer = await models.Customer.findByPk(id);
-    if (!customer) {
+    const user = await models.Customer.findByPk(id);
+    if (!user) {
       throw boom.notFound('customer not found');
     }
-    return customer;
+    return user;
   }
 
-  async update(id, data) {
-    const customer = await this.findOne(id);
-    const rta = await customer.update(data);
+  async create(data) {
+    const newCustomer = await models.Customer.create(data, {
+      include: ['user'],
+    });
+    return newCustomer;
+  }
+
+  async update(id, changes) {
+    const model = await this.findOne(id);
+    const rta = await model.update(changes);
     return rta;
   }
 
   async delete(id) {
-    const customer = await this.findOne(id);
-    await customer.destroy();
+    const model = await this.findOne(id);
+    await model.destroy();
     return { id };
   }
 }
 
-module.exports = CustomersService;
+module.exports = CustomerService;
