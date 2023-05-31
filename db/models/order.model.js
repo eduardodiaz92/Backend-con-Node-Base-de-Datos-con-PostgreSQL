@@ -26,7 +26,7 @@ const OrderSchema = {
 };
 
 class Order extends Model {
-  static asosiate() {
+  static assosiate() {
     //Model
   }
 
